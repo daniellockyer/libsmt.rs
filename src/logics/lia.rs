@@ -7,12 +7,12 @@ use std::fmt;
 use theories::{integer, core};
 use backends::backend::{Logic, SMTNode};
 
-define_sorts_for_logic!(LIA_Sorts,
+define_sorts_for_logic!(LIASorts,
                   Int -> integer::Sorts,
                   Core -> core::Sorts
                  );
 
-define_fns_for_logic!(LIA_Fn,
+define_fns_for_logic!(LIAFn,
                       IntOps -> integer::OpCodes,
                       CoreOps -> core::OpCodes
                      );
@@ -27,14 +27,14 @@ impl fmt::Display for LIA {
 }
 
 impl Logic for LIA {
-    type Fns = LIA_Fn;
-    type Sorts = LIA_Sorts;
+    type Fns = LIAFn;
+    type Sorts = LIASorts;
 
-    fn free_var<T: AsRef<str>>(name: T, ty: LIA_Sorts) -> Self::Fns {
+    fn free_var<T: AsRef<str>>(name: T, ty: LIASorts) -> Self::Fns {
         let fv = match ty {
-            LIA_Sorts::Int(_) => integer::OpCodes::FreeVar(name.as_ref().to_owned()),
-            LIA_Sorts::Core(_) => unreachable!(),
+            LIASorts::Int(_) => integer::OpCodes::FreeVar(name.as_ref().to_owned()),
+            LIASorts::Core(_) => unreachable!(),
         };
-        LIA_Fn::IntOps(fv)
+        LIAFn::IntOps(fv)
     }
 }

@@ -8,20 +8,20 @@ use std::fmt;
 use theories::{bitvec, core};
 use backends::backend::{Logic, SMTNode};
 
-define_sorts_for_logic!(QF_BV_Sorts,
+define_sorts_for_logic!(QFBVSorts,
                   BV -> bitvec::Sorts,
                   Core -> core::Sorts
                  );
 
-define_fns_for_logic!(QF_BV_Fn,
+define_fns_for_logic!(QFBVFn,
                       BVOps -> bitvec::OpCodes,
                       CoreOps -> core::OpCodes
                      );
 
-define_logic!(QF_BV,
-              QF_BV_Fn,
-              QF_BV_Sorts,
+define_logic!(QFBV,
+              QFBVFn,
+              QFBVSorts,
               map {
-                  QF_BV_Sorts::BV(_) => bitvec::OpCodes::FreeVar
+                  QFBVSorts::BV(_) => bitvec::OpCodes::FreeVar
               }
              );

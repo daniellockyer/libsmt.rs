@@ -144,6 +144,14 @@ impl<L: Logic> SMTLib2<L> {
         solver
     }
 
+    pub fn contains_mapping(&self, name: &String) -> bool {
+        self.var_map.contains_key(name)
+    }
+
+    pub fn get_by_name(&self, name: &String) -> NodeIndex {
+        self.var_map.get(name).unwrap().0
+    }
+
     // Recursive function that builds up the assertion string from the tree.
     pub fn expand_assertion(&self, ni: NodeIndex) -> String {
         let mut children = self.gr
@@ -204,7 +212,7 @@ impl<L: Logic> SMTBackend for SMTLib2<L> {
             return;
         }
         let logic = self.logic.unwrap().clone();
-        smt_proc.write(format!("(set-logic {})\n", logic));
+        let _ = smt_proc.write(format!("(set-logic {})\n", logic));
     }
 
     fn assert<T: Into<L::Fns>>(&mut self, assert: T, ops: &[Self::Idx]) -> Self::Idx {
@@ -238,10 +246,10 @@ impl<L: Logic> SMTBackend for SMTLib2<L> {
 
         for w in decls.iter().chain(assertions.iter()) {
             if debug { print!("{}", w) };
-            smt_proc.write(w);
+            let _ = smt_proc.write(w);
         }
 
-        smt_proc.write("(check-sat)\n".to_owned());
+        let _ = smt_proc.write("(check-sat)\n".to_owned());
         let read = smt_proc.read_checksat_output();
         if &read == "sat" {
             SMTRes::Sat(read, None)
@@ -254,12 +262,12 @@ impl<L: Logic> SMTBackend for SMTLib2<L> {
 
     // TODO: Return type information along with the value.
     fn solve<S: SMTProc>(&mut self, smt_proc: &mut S, debug: bool) -> (SMTResult<HashMap<Self::Idx, u64>>, SMTRes) {
-        let mut result = HashMap::new();
+        let result = HashMap::new();
         let check_sat = self.check_sat(smt_proc, debug);
         // If the VC was satisfyable get the model
         match check_sat {
             SMTRes::Sat(ref res, _) => {
-                smt_proc.write("(get-model)\n".to_owned());
+                let _ = smt_proc.write("(get-model)\n".to_owned());
                 let read_result = smt_proc.read_getmodel_output();
                 return (Ok(result), SMTRes::Sat(res.clone(), Some(read_result)));
             },

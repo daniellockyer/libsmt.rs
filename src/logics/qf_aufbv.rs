@@ -3,22 +3,22 @@ use std::fmt;
 use theories::{array_ex, bitvec, core};
 use backends::backend::{Logic, SMTNode};
 
-define_sorts_for_logic!(QF_AUFBV_Sorts,
+define_sorts_for_logic!(QFAUFBVSorts,
                         BV -> bitvec::Sorts,
                         Core -> core::Sorts,
-                        ArrayEx -> array_ex::Sorts<QF_AUFBV_Sorts, QF_AUFBV_Sorts>
+                        ArrayEx -> array_ex::Sorts<QFAUFBVSorts, QFAUFBVSorts>
                         );
 
-define_fns_for_logic!(QF_AUFBV_Fn,
+define_fns_for_logic!(QFAUFBVFn,
                       BVOps -> bitvec::OpCodes,
                       CoreOps -> core::OpCodes,
-                      ArrayOps -> array_ex::OpCodes<QF_AUFBV_Sorts, QF_AUFBV_Sorts, QF_AUFBV_Fn>
+                      ArrayOps -> array_ex::OpCodes<QFAUFBVSorts, QFAUFBVSorts, QFAUFBVFn>
                       );
 
-define_logic!(QF_AUFBV,
-              QF_AUFBV_Fn,
-              QF_AUFBV_Sorts,
-              map { QF_AUFBV_Sorts::BV(_) => bitvec::OpCodes::FreeVar,
-                  QF_AUFBV_Sorts::ArrayEx(_) => array_ex::OpCodes::FreeVar
+define_logic!(QFAUFBV,
+              QFAUFBVFn,
+              QFAUFBVSorts,
+              map { QFAUFBVSorts::BV(_) => bitvec::OpCodes::FreeVar,
+                  QFAUFBVSorts::ArrayEx(_) => array_ex::OpCodes::FreeVar
               }
               );
