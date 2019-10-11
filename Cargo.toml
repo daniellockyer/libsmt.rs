@@ -36,5 +36,5 @@ name = "bajr"
 test = true
 
 [dependencies]
-petgraph = "0.3"
+petgraph = "0.4"
 regex = "0.2"
