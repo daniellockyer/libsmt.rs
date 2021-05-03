@@ -37,4 +37,4 @@ test = true
 
 [dependencies]
 petgraph = "0.3"
-regex = "0.2"
+regex = "1.5"
